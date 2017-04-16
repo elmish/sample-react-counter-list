@@ -1,8 +1,8 @@
 module App
 
 (**
- - title: Counter
- - tagline: The famous Increment/Decrement ported from Elm
+ - title: Counter-List
+ - tagline: The famous Increment/Decrement list sample ported from Elm
 *)
 
 open Fable.Core
@@ -11,20 +11,41 @@ open Elmish
 
 // MODEL
 
-type Model = int
+type ID = int
 
-type Msg =
-| Increment
-| Decrement
+type Model = {
+    Counters : Counter.Model list
+}
 
-let init() : Model = 0
+type Msg = 
+| Insert
+| Remove
+| Modify of ID * Counter.Msg
+
+let init() : Model =
+    { Counters = [] }
 
 // UPDATE
 
 let update (msg:Msg) (model:Model) =
     match msg with
-    | Increment -> model + 1
-    | Decrement -> model - 1
+    | Insert ->
+        { Counters = Counter.init() :: model.Counters }
+
+    | Remove ->
+        { Counters = 
+            match model.Counters with
+            | [] -> []
+            | x :: rest -> rest }
+
+    | Modify (id, counterMsg) ->
+        { Counters =
+            model.Counters
+            |> List.mapi (fun i counterModel -> 
+                if i = id then
+                    Counter.update counterMsg counterModel
+                else
+                    counterModel) }
 
 open Fable.Core.JsInterop
 open Fable.Helpers.React.Props
@@ -33,11 +54,16 @@ module R = Fable.Helpers.React
 // VIEW (rendered with React)
 
 let view model dispatch =
+    let counterDispatch i msg = dispatch (Modify (i, msg))
 
-  R.div []
-      [ R.button [ OnClick (fun _ -> dispatch Decrement) ] [ R.str "-" ]
-        R.div [] [ R.str (sprintf "%A" model) ]
-        R.button [ OnClick (fun _ -> dispatch Increment) ] [ R.str "+" ] ]
+    let counters = 
+        model.Counters
+        |> List.mapi (fun i c -> Counter.view c (counterDispatch i))
+    
+    R.div [] [ 
+        yield R.button [ OnClick (fun _ -> dispatch Remove) ] [ R.str "Remove" ]
+        yield R.button [ OnClick (fun _ -> dispatch Insert) ] [ R.str "Add" ] 
+        yield! counters ]
 
 open Elmish.React
 

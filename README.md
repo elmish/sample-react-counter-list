@@ -1,7 +1,8 @@
-This is a port of [Elm's counter example](https://github.com/evancz/elm-architecture-tutorial/blob/master/examples/1-button.elm) implemented in F# and targeting Fable and React.
+This is a port of [Elm's counter list example](https://github.com/debois/elm-parts/blob/master/examples/2-counter-list.elm) implemented in F# and targeting Fable and React.
 ========
 
 This is a simple demo of [Elmish](https://github.com/fable-compiler/fable-elmish).
+It show how to use the [counter sample](https://github.com/fable-elmish/sample-react-counter) as a component for reuse.
 
 
 ## Build and running the sample

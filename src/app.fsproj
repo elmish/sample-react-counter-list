@@ -6,6 +6,7 @@
     <ProjectReference Include="node_modules/fable-elmish-react/Fable.Elmish.React.fsproj" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="counter.fs" />
     <Compile Include="app.fs" />
   </ItemGroup>
   <ItemGroup>
